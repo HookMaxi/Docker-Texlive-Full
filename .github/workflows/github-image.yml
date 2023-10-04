@@ -1,0 +1,31 @@
+name: Build Github Package
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Github Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: build
+        run: |
+          docker build -t  ${{ github.ref_name }} .
+
+      - name: Push
+        run: |
+          TAG="ghcr.io/HookMaxi/Docker-Texlive-Full"
+          docker tag ${{ github.ref_name }} $TAG:${{ github.ref_name }}
+          docker tag ${{ github.ref_name }} $TAG:latest
+          docker images $TAG
+          echo ${{ secrets.TOKEN_PASS }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          docker push $TAG:$VERSION
+          docker push $TAG:latest
+          docker logout
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker push $TAG:$VERSION
+          docker push $TAG:latest
+          docker logout
