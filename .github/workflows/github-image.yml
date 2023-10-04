@@ -23,7 +23,7 @@ jobs:
           docker tag ${{ github.ref_name }} $TAG:latest
           docker images $TAG
           echo ${{ secrets.TOKEN_PASS }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push $TAG:$${{ github.ref_name }}
+          docker push $TAG:${{ github.ref_name }}
           docker push $TAG:latest
 
       - name: Push Docker Hub
@@ -33,7 +33,7 @@ jobs:
           docker tag ${{ github.ref_name }} $TAG:latest
           docker images $TAG
           echo ${{ secrets.TOKEN_PASS }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push $TAG:$${{ github.ref_name }}
+          docker push $TAG:${{ github.ref_name }}
           docker push $TAG:latest
 
           
