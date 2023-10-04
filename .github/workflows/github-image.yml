@@ -25,6 +25,7 @@ jobs:
           echo ${{ secrets.TOKEN_PASS }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
           docker push $TAG:${{ github.ref_name }}
           docker push $TAG:latest
+          docker logout
 
       - name: Push Docker Hub
         run: |
@@ -32,8 +33,9 @@ jobs:
           docker tag ${{ github.ref_name }} $TAG:${{ github.ref_name }}
           docker tag ${{ github.ref_name }} $TAG:latest
           docker images $TAG
-          echo ${{ secrets.TOKEN_PASS }} | docker login -u $GITHUB_ACTOR --password-stdin
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
           docker push $TAG:${{ github.ref_name }}
           docker push $TAG:latest
+          docker logout
 
           
